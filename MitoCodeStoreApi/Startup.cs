@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MitoCodeStore.DataAccess;
 using MitoCodeStore.Services;
@@ -43,6 +45,7 @@ namespace MitoCodeStoreApi
             services.AddDbContext<MitoCodeStoreDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
+                options.LogTo(Console.WriteLine, LogLevel.Information);
             });
 
             services.AddControllers(options =>
@@ -54,7 +57,13 @@ namespace MitoCodeStoreApi
             //services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MitoCodeStoreApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "MitoCodeStoreApi", 
+                    Version = "v1",
+                    Description = "API para Mitocode Store"
+                });
+                
             });
         }
 

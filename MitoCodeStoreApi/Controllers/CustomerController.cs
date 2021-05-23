@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using MitoCodeStore.Dto;
+using MitoCodeStore.Dto.Response;
 using MitoCodeStore.Services;
 using MitoCodeStoreApi.Filters;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Swashbuckle.Swagger.Annotations;
 
 namespace MitoCodeStoreApi.Controllers
 {
@@ -21,16 +23,22 @@ namespace MitoCodeStoreApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CustomerDto>> List([FromQuery] string filter)
+        [SwaggerResponse(HttpStatusCode.OK, "Ok", typeof(CustomerDtoResponse))]
+        public async Task<IActionResult> List([FromQuery] string filter,
+            int page = 1, int rows = 4)
         {
-            return await _service.GetCollectionAsync(filter);
+            return Ok(await _service.GetCollectionAsync(filter, page, rows));
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ResponseDto<CustomerDto>> Get(int id)
+        [SwaggerResponse(HttpStatusCode.OK, "Encontrado", typeof(ResponseDto<CustomerDto>))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Not Found", typeof(object))]
+        public async Task<IActionResult> Get(int id)
         {
-            return await _service.GetCustomerAsync(id);
+            var response = await _service.GetCustomerAsync(id);
+
+            return response.Success ? Ok(response) : NotFound();
         }
 
         [HttpPost]
@@ -41,22 +49,25 @@ namespace MitoCodeStoreApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _service.CreateAsync(request);
+            var customer = await _service.CreateAsync(request);
 
-            return Ok();
+            return Created($"Customer/{customer.Id}", customer);
         }
 
         [HttpPut("{id:int}")]
-        public async Task Update(int id, [FromBody] CustomerDto request)
+        public async Task<IActionResult> Update(int id, [FromBody] CustomerDto request)
         {
             await _service.UpdateAsync(id, request);
+            return Accepted();
         }
 
 
         [HttpDelete("{id:int}")]
-        public async Task Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
+
+            return Accepted();
         }
     }
 }

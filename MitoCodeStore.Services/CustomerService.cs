@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using MitoCodeStore.DataAccess;
 using MitoCodeStore.Dto;
 using System.Linq;
+using System.Xml.Schema;
 using Microsoft.Extensions.Logging;
+using MitoCodeStore.Dto.Response;
 using MitoCodeStore.Entities;
 
 namespace MitoCodeStore.Services
@@ -21,19 +23,30 @@ namespace MitoCodeStore.Services
         }
 
 
-        public async Task<ICollection<CustomerDto>> GetCollectionAsync(string filter)
+        public async Task<CustomerDtoResponse> GetCollectionAsync(string filter, int page, int rows)
         {
-            var collection = await _repository.GetCollectionAsync(filter ?? string.Empty);
+            var response = new CustomerDtoResponse();
 
-            return collection.
-                Select(p => new CustomerDto
+            var repositoryResult = await _repository
+                .GetCollectionAsync(filter ?? string.Empty, page, rows);
+
+            response.Customers = repositoryResult.collection
+                .Select(p => new CustomerDtoSingleResponse()
                 {
-                    Id = p.Id,
-                    Name = p.Name,
-                    BirthDate = p.BirthDate,
-                    NumberId = p.NumberId
+                    CustomerId = p.Id,
+                    CustomerName = p.Name,
+                    CustomerBirth = p.BirthDate.ToShortDateString(),
+                    CustomerNumberId = p.NumberId
                 })
                 .ToList();
+
+            var totalPages = repositoryResult.total / rows;
+            if (repositoryResult.total % rows > 0)
+                totalPages++;
+
+            response.TotalPages = totalPages;
+
+            return response;
 
         }
 
@@ -61,16 +74,24 @@ namespace MitoCodeStore.Services
             return response;
         }
 
-        public async Task CreateAsync(CustomerDto request)
+        public async Task<CustomerDto> CreateAsync(CustomerDto request)
         {
             try
             {
-                await _repository.CreateAsync(new Customer
+                var result = await _repository.CreateAsync(new Customer
                 {
                     Name = request.Name,
                     BirthDate = request.BirthDate,
                     NumberId = request.NumberId
                 });
+
+                return new CustomerDto
+                {
+                    Id = result.Id,
+                    Name = result.Name,
+                    BirthDate = result.BirthDate,
+                    NumberId = result.NumberId
+                };
             }
             catch (Exception ex)
             {

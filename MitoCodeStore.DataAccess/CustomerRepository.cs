@@ -16,14 +16,25 @@ namespace MitoCodeStore.DataAccess
         }
 
 
-        public async Task<ICollection<Customer>> GetCollectionAsync(string filter)
+        public async Task<(ICollection<Customer> collection, int total)> GetCollectionAsync(string filter, int page, int rows)
         {
-            var collection = await _context.Customers
-                .Where(p => p.Name.Contains(filter))
-                .AsNoTracking()
-                .ToListAsync();
 
-            return collection;
+            var query = _context.Customers
+                .Where(p => p.Name.Contains(filter));
+
+            var collection = await query.OrderBy(p => p.Id)
+                .Select(p => new
+                {
+                    Customer = p,
+                    Total = query.Select(x => x).Count()
+                })
+            .AsNoTracking()
+            .Skip((page - 1) * rows)
+            .Take(rows)
+            .ToListAsync();
+
+            return (collection.Select(y => y.Customer).ToList(),
+                    collection.First().Total);
         }
 
         public async Task<Customer> GetItemAsync(int id)
@@ -31,10 +42,12 @@ namespace MitoCodeStore.DataAccess
             return await _context.Customers.FindAsync(id);
         }
 
-        public async Task CreateAsync(Customer entity)
+        public async Task<Customer> CreateAsync(Customer entity)
         {
             await _context.Set<Customer>().AddAsync(entity);
             await _context.SaveChangesAsync();
+
+            return entity;
         }
 
         public async Task UpdateAsync(int id, Customer entity)

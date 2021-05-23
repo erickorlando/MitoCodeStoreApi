@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitoCodeStoreApi", "MitoCodeStoreApi\MitoCodeStoreApi.csproj", "{9879A66D-972F-4722-ADB7-4A86AC6DE167}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitoCodeStoreApi", "MitoCodeStoreApi\MitoCodeStoreApi.csproj", "{9879A66D-972F-4722-ADB7-4A86AC6DE167}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00. Entities", "00. Entities", "{24B8D019-B438-4BB3-B2EF-2983F8EA7018}"
 EndProject
@@ -15,13 +15,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03. Services", "03. Service
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04. Web API", "04. Web API", "{CDDB066F-8AD0-440E-B3C9-DC6A1E2A1AEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitoCodeStore.Entities", "MitoCodeStore.Entities\MitoCodeStore.Entities.csproj", "{CEBC0CDF-3EAA-484D-A7BB-6A2BBCA690D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitoCodeStore.Entities", "MitoCodeStore.Entities\MitoCodeStore.Entities.csproj", "{CEBC0CDF-3EAA-484D-A7BB-6A2BBCA690D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitoCodeStore.DataAccess", "MitoCodeStore.DataAccess\MitoCodeStore.DataAccess.csproj", "{7EDE994D-FBC4-4C01-B4DF-8643B1C9C7CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitoCodeStore.DataAccess", "MitoCodeStore.DataAccess\MitoCodeStore.DataAccess.csproj", "{7EDE994D-FBC4-4C01-B4DF-8643B1C9C7CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitoCodeStore.Dto", "MitoCodeStore.Dto\MitoCodeStore.Dto.csproj", "{1CA708A3-C061-40A5-A765-5C97E113A78D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitoCodeStore.Dto", "MitoCodeStore.Dto\MitoCodeStore.Dto.csproj", "{1CA708A3-C061-40A5-A765-5C97E113A78D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitoCodeStore.Services", "MitoCodeStore.Services\MitoCodeStore.Services.csproj", "{2C862F6D-3E7C-4CEF-A6C3-C7A59ACA896C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitoCodeStore.Services", "MitoCodeStore.Services\MitoCodeStore.Services.csproj", "{2C862F6D-3E7C-4CEF-A6C3-C7A59ACA896C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05. Unit Test", "05. Unit Test", "{25C1D65E-C6F4-41D9-AEC6-8C3873C21CBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitoCodeStoreUnitTests", "MitoCodeStoreUnitTests\MitoCodeStoreUnitTests.csproj", "{374AEF3E-231D-42D8-A7DE-82934F879B02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitoCodeStorexUnitTest", "MitoCodeStorexUnitTest\MitoCodeStorexUnitTest.csproj", "{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +55,14 @@ Global
 		{2C862F6D-3E7C-4CEF-A6C3-C7A59ACA896C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C862F6D-3E7C-4CEF-A6C3-C7A59ACA896C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C862F6D-3E7C-4CEF-A6C3-C7A59ACA896C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{374AEF3E-231D-42D8-A7DE-82934F879B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{374AEF3E-231D-42D8-A7DE-82934F879B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{374AEF3E-231D-42D8-A7DE-82934F879B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{374AEF3E-231D-42D8-A7DE-82934F879B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +73,8 @@ Global
 		{7EDE994D-FBC4-4C01-B4DF-8643B1C9C7CF} = {6BEE26D0-044D-424F-A372-8A7C1B228AA9}
 		{1CA708A3-C061-40A5-A765-5C97E113A78D} = {2AC2E19D-59B9-4628-8283-12ECED15CAD8}
 		{2C862F6D-3E7C-4CEF-A6C3-C7A59ACA896C} = {57EB20A6-6169-46CF-9F9B-6026EF52C596}
+		{374AEF3E-231D-42D8-A7DE-82934F879B02} = {25C1D65E-C6F4-41D9-AEC6-8C3873C21CBE}
+		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F} = {25C1D65E-C6F4-41D9-AEC6-8C3873C21CBE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19875B72-0D0F-4D98-B8DC-DF8A0B0F831A}
