@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MitoCodeStore.DataAccess;
 
 namespace MitoCodeStore.DataAccess.Migrations
 {
     [DbContext(typeof(MitoCodeStoreDbContext))]
-    partial class MitoCodeStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210530164618_MoreTables")]
+    partial class MoreTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,35 +150,6 @@ namespace MitoCodeStore.DataAccess.Migrations
                     b.ToTable("Sales");
                 });
 
-            modelBuilder.Entity("MitoCodeStore.Entities.SaleDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Quantity")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("decimal(8,2)");
-
-                    b.Property<decimal>("Total")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("decimal(8,2)");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("decimal(8,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("SaleDetail");
-                });
-
             modelBuilder.Entity("MitoCodeStore.Entities.Product", b =>
                 {
                     b.HasOne("MitoCodeStore.Entities.Category", "Category")
@@ -205,17 +178,6 @@ namespace MitoCodeStore.DataAccess.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("PaymentMethod");
-                });
-
-            modelBuilder.Entity("MitoCodeStore.Entities.SaleDetail", b =>
-                {
-                    b.HasOne("MitoCodeStore.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }

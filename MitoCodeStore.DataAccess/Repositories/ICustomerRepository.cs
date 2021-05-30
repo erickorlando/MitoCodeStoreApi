@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MitoCodeStore.Entities;
 
-namespace MitoCodeStore.DataAccess
+namespace MitoCodeStore.DataAccess.Repositories
 {
     public interface ICustomerRepository
     {
@@ -10,9 +10,9 @@ namespace MitoCodeStore.DataAccess
 
         Task<Customer> GetItemAsync(int id);
 
-        Task<Customer> CreateAsync(Customer entity);
+        Task<int> CreateAsync(Customer entity);
 
-        Task UpdateAsync(int id, Customer entity);
+        Task UpdateAsync(Customer entity);
 
         Task DeleteAsync(int id);
     }

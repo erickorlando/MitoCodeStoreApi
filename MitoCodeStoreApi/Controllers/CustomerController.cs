@@ -1,11 +1,11 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MitoCodeStore.Dto;
 using MitoCodeStore.Dto.Response;
 using MitoCodeStore.Services;
 using MitoCodeStoreApi.Filters;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Threading.Tasks;
-using Swashbuckle.Swagger.Annotations;
+
 
 namespace MitoCodeStoreApi.Controllers
 {
@@ -23,7 +23,7 @@ namespace MitoCodeStoreApi.Controllers
         }
 
         [HttpGet]
-        [SwaggerResponse(HttpStatusCode.OK, "Ok", typeof(CustomerDtoResponse))]
+        [SwaggerResponse(200, "Ok", typeof(CustomerDtoResponse))]
         public async Task<IActionResult> List([FromQuery] string filter,
             int page = 1, int rows = 4)
         {
@@ -32,8 +32,8 @@ namespace MitoCodeStoreApi.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        [SwaggerResponse(HttpStatusCode.OK, "Encontrado", typeof(ResponseDto<CustomerDto>))]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Not Found", typeof(object))]
+        [SwaggerResponse(200, "Encontrado", typeof(ResponseDto<CustomerDto>))]
+        [SwaggerResponse(404, "Not Found", typeof(object))]
         public async Task<IActionResult> Get(int id)
         {
             var response = await _service.GetCustomerAsync(id);

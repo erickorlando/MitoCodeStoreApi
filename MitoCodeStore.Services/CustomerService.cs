@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
 using MitoCodeStore.DataAccess;
 using MitoCodeStore.Dto;
-using System.Linq;
-using System.Xml.Schema;
-using Microsoft.Extensions.Logging;
 using MitoCodeStore.Dto.Response;
 using MitoCodeStore.Entities;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using MitoCodeStore.DataAccess.Repositories;
 
 namespace MitoCodeStore.Services
 {
@@ -87,10 +86,10 @@ namespace MitoCodeStore.Services
 
                 return new CustomerDto
                 {
-                    Id = result.Id,
-                    Name = result.Name,
-                    BirthDate = result.BirthDate,
-                    NumberId = result.NumberId
+                    Id = result,
+                    Name = request.Name,
+                    BirthDate = request.BirthDate,
+                    NumberId = request.NumberId
                 };
             }
             catch (Exception ex)
@@ -102,7 +101,7 @@ namespace MitoCodeStore.Services
 
         public async Task UpdateAsync(int id, CustomerDto request)
         {
-            await _repository.UpdateAsync(id, new Customer
+            await _repository.UpdateAsync(new Customer
             {
                 Name = request.Name,
                 BirthDate = request.BirthDate,

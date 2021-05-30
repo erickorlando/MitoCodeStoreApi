@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MitoCodeStore.DataAccess;
+using MitoCodeStore.DataAccess.Repositories;
 
 namespace MitoCodeStore.Services
 {
@@ -15,8 +15,14 @@ namespace MitoCodeStore.Services
 
             // STATELESS = SIN ESTADO.
 
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IProductService, ProductService>();
+
+
             return services.AddTransient<ICustomerRepository, CustomerRepository>()
                 .AddTransient<ICustomerService, CustomerService>();
+
+
         }
     }
 }

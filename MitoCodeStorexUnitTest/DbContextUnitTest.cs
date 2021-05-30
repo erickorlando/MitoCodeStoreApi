@@ -8,7 +8,7 @@ namespace MitoCodeStorexUnitTest
 {
     public class DbContextUnitTest : IDisposable
     {
-        protected MitoCodeStoreDbContext _context;
+        protected readonly MitoCodeStoreDbContext _context;
 
         public DbContextUnitTest()
         {
