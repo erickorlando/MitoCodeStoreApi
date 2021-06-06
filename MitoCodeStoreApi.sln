@@ -27,6 +27,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05. Unit Test", "05. Unit T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitoCodeStorexUnitTest", "MitoCodeStorexUnitTest\MitoCodeStorexUnitTest.csproj", "{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06. Utils", "06. Utils", "{8152E4DC-28D8-40AF-8F5A-F53EDEE01820}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitCodeBase64Converter", "MitCodeBase64Converter\MitCodeBase64Converter.csproj", "{3DFD0B53-5BA0-4413-BD8D-C1F23BD1F4AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DFD0B53-5BA0-4413-BD8D-C1F23BD1F4AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DFD0B53-5BA0-4413-BD8D-C1F23BD1F4AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DFD0B53-5BA0-4413-BD8D-C1F23BD1F4AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DFD0B53-5BA0-4413-BD8D-C1F23BD1F4AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +76,7 @@ Global
 		{1CA708A3-C061-40A5-A765-5C97E113A78D} = {2AC2E19D-59B9-4628-8283-12ECED15CAD8}
 		{2C862F6D-3E7C-4CEF-A6C3-C7A59ACA896C} = {57EB20A6-6169-46CF-9F9B-6026EF52C596}
 		{95BDFA23-43DE-4DF4-AEF4-A2E69DB0B22F} = {25C1D65E-C6F4-41D9-AEC6-8C3873C21CBE}
+		{3DFD0B53-5BA0-4413-BD8D-C1F23BD1F4AA} = {8152E4DC-28D8-40AF-8F5A-F53EDEE01820}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19875B72-0D0F-4D98-B8DC-DF8A0B0F831A}

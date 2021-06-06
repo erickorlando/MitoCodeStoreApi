@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.8.4" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MitoCodeStore.DataAccess\MitoCodeStore.DataAccess.csproj" />
     <ProjectReference Include="..\MitoCodeStore.Dto\MitoCodeStore.Dto.csproj" />
   </ItemGroup>

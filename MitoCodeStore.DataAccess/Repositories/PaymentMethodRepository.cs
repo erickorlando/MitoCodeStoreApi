@@ -1,4 +1,5 @@
 ﻿using MitoCodeStore.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MitoCodeStore.DataAccess.Repositories
@@ -7,6 +8,11 @@ namespace MitoCodeStore.DataAccess.Repositories
     {
         public PaymentMethodRepository(MitoCodeStoreDbContext context) : base(context)
         {
+        }
+
+        public async Task<ICollection<PaymentMethod>> GetCollectionAsync()
+        {
+            return await ListCollection(p => p);
         }
 
         public async Task<PaymentMethod> GetItemAsync(int id)

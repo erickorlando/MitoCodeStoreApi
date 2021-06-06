@@ -1,4 +1,4 @@
-﻿namespace MitoCodeStore.Dto
+﻿namespace MitoCodeStore.Dto.Response
 {
     public class ProductDto
     {

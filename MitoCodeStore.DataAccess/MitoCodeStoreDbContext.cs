@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MitoCodeStore.Entities;
+using MitoCodeStore.Entities.Complex;
 
 namespace MitoCodeStore.DataAccess
 {
-    public class MitoCodeStoreDbContext : DbContext
+    public class MitoCodeStoreDbContext : IdentityDbContext<MitoCodeUserIdentity>
     {
         public MitoCodeStoreDbContext(DbContextOptions<MitoCodeStoreDbContext> options)
         : base(options)
@@ -39,6 +41,21 @@ namespace MitoCodeStore.DataAccess
             modelBuilder.Entity<SaleDetail>()
                 .Property(p => p.Total)
                 .HasPrecision(8, 2);
+
+            modelBuilder.Entity<InvoiceDetailInfo>()
+                .HasNoKey();
+
+            modelBuilder.Entity<InvoiceDetailInfo>()
+                .Property(p => p.Quantity)
+                .HasPrecision(8, 2);
+            
+            modelBuilder.Entity<InvoiceDetailInfo>()
+                .Property(p => p.UnitPrice)
+                .HasPrecision(8, 2);
+            
+            modelBuilder.Entity<InvoiceDetailInfo>()
+                .Property(p => p.Total)
+                .HasPrecision(8, 2);
         }
 
 
@@ -47,5 +64,6 @@ namespace MitoCodeStore.DataAccess
         public DbSet<Category> Categories { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<InvoiceDetailInfo> SaleDetails { get; set; }
     }
 }

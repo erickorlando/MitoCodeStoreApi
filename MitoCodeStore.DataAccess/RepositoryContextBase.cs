@@ -20,14 +20,14 @@ namespace MitoCodeStore.DataAccess
             Context = context;
         }
 
-        public virtual ICollection<TInfo> ListCollection<TInfo>(Expression<Func<TEntityBase, TInfo>> selector)
-        where TInfo : class, new()
+        public virtual async Task<ICollection<TInfo>> ListCollection<TInfo>(Expression<Func<TEntityBase, TInfo>> selector)
+            where TInfo : class, new()
         {
-            return Context.Set<TEntityBase>()
+            return await Context.Set<TEntityBase>()
                 .OrderBy(p => p.Id)
                 .AsNoTracking()
                 .Select(selector)
-                .ToList();
+                .ToListAsync();
         }
 
         public virtual async Task<(ICollection<TEntityBase> collection, int total)> ListCollection(
@@ -38,6 +38,30 @@ namespace MitoCodeStore.DataAccess
             var collection = await Context.Set<TEntityBase>()
                 .Where(predicate).OrderBy(p => p.Id)
                 .AsNoTracking()
+                .Skip((page - 1) * rows)
+                .Take(rows)
+                .ToListAsync();
+
+            var totalCount = await Context.Set<TEntityBase>()
+                .Where(predicate)
+                .AsNoTracking()
+                .CountAsync();
+
+            return (collection.ToList(), totalCount);
+
+        }
+
+        public virtual async Task<(ICollection<TInfo> collection, int total)> ListCollectionAsync<TInfo>(
+            Expression<Func<TEntityBase, TInfo>> selector,
+            Expression<Func<TEntityBase, bool>> predicate,
+            int page,
+            int rows)
+            where TInfo : class, new()
+        {
+            var collection = await Context.Set<TEntityBase>()
+                .Where(predicate).OrderBy(p => p.Id)
+                .AsNoTracking()
+                .Select(selector)
                 .Skip((page - 1) * rows)
                 .Take(rows)
                 .ToListAsync();

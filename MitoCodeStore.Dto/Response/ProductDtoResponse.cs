@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using MitoCodeStore.Dto.Request;
 
 namespace MitoCodeStore.Dto.Response
 {
-    public class ProductDtoResponse
+    public class ProductDtoResponse : CollectionBaseDtoResponse<ProductDto>
     {
-        public ICollection<ProductDto> Products { get; set; }
-        public int TotalPages { get; set; }
+        
     }
 }

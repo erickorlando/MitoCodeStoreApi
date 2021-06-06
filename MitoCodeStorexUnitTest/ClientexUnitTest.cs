@@ -1,12 +1,11 @@
 using Microsoft.Extensions.Logging;
-using MitoCodeStore.DataAccess;
-using MitoCodeStore.Dto;
+using MitoCodeStore.DataAccess.Repositories;
+using MitoCodeStore.Dto.Request;
 using MitoCodeStore.Entities;
-using MitoCodeStore.Services;
+using MitoCodeStore.Services.Implementations;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MitoCodeStore.DataAccess.Repositories;
 using Xunit;
 
 namespace MitoCodeStorexUnitTest
@@ -21,13 +20,13 @@ namespace MitoCodeStorexUnitTest
             repository.Setup(x => x.GetCollectionAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(CustomerResults());
 
-            var logger = new Mock<ILogger<CustomerDto>>();
+            var logger = new Mock<ILogger<CustomerDtoRequest>>();
 
             var service = new CustomerService(repository.Object, logger.Object);
 
 
             // Act
-            var actual = await service.GetCollectionAsync("", 1, 4);
+            var actual = await service.GetCollectionAsync(new BaseDtoRequest("", 1, 4));
             var expected = 11;
 
             // Assert
@@ -66,12 +65,12 @@ namespace MitoCodeStorexUnitTest
             //repository.Setup(x => x.GetCollectionAsync("", 1, rows))
             //    .ReturnsAsync((list, 0));
 
-            var logger = new Mock<ILogger<CustomerDto>>();
+            var logger = new Mock<ILogger<CustomerDtoRequest>>();
 
             var service = new CustomerService(repository, logger.Object);
 
             // Act
-            var actual = await service.GetCollectionAsync(filter, 1, rows);
+            var actual = await service.GetCollectionAsync(new BaseDtoRequest("", 1, rows));
 
             // Assert
             Assert.Equal(expected, actual.TotalPages);

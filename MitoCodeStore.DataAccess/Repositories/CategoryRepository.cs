@@ -6,7 +6,7 @@ namespace MitoCodeStore.DataAccess.Repositories
 {
     public class CategoryRepository : RepositoryContextBase<Category>, ICategoryRepository
     {
-        protected CategoryRepository(MitoCodeStoreDbContext context) : base(context)
+        public CategoryRepository(MitoCodeStoreDbContext context) : base(context)
         {
         }
 

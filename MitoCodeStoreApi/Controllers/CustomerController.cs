@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MitoCodeStore.Dto;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MitoCodeStore.Dto.Request;
 using MitoCodeStore.Dto.Response;
-using MitoCodeStore.Services;
+using MitoCodeStore.Entities;
+using MitoCodeStore.Services.Interfaces;
 using MitoCodeStoreApi.Filters;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Threading.Tasks;
@@ -9,9 +11,10 @@ using System.Threading.Tasks;
 
 namespace MitoCodeStoreApi.Controllers
 {
-    [Route("api/v1/[controller]")]
-    [ApiVersion("1.0")]
+    [Route(Constants.RouteTemplate)]
+    [ApiVersion(Constants.V1)]
     [ApiController]
+    [Authorize]
     [TypeFilter(typeof(FiltroRecurso))]
     public class CustomerController : ControllerBase
     {
@@ -23,17 +26,17 @@ namespace MitoCodeStoreApi.Controllers
         }
 
         [HttpGet]
-        [SwaggerResponse(200, "Ok", typeof(CustomerDtoResponse))]
+        [SwaggerResponse(Constants.Ok, Constants.Listo, typeof(CustomerDtoResponse))]
         public async Task<IActionResult> List([FromQuery] string filter,
             int page = 1, int rows = 4)
         {
-            return Ok(await _service.GetCollectionAsync(filter, page, rows));
+            return Ok(await _service.GetCollectionAsync(new BaseDtoRequest(filter, page, rows)));
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        [SwaggerResponse(200, "Encontrado", typeof(ResponseDto<CustomerDto>))]
-        [SwaggerResponse(404, "Not Found", typeof(object))]
+        [SwaggerResponse(Constants.Ok, Constants.Listo, typeof(ResponseDto<CustomerDtoSingleResponse>))]
+        [SwaggerResponse(Constants.NotFound, Constants.NoEncontrado, typeof(object))]
         public async Task<IActionResult> Get(int id)
         {
             var response = await _service.GetCustomerAsync(id);
@@ -42,32 +45,51 @@ namespace MitoCodeStoreApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody][ModelBinder] CustomerDto request)
+        [SwaggerResponse(Constants.Created, Constants.Creado)]
+        public async Task<IActionResult> Post([FromBody][ModelBinder] CustomerDtoRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var customer = await _service.CreateAsync(request);
+            var response = await _service.CreateAsync(request);
 
-            return Created($"Customer/{customer.Id}", customer);
+            if (response.Success)
+                return Created($"Customer/{response.Result}", new
+                {
+                    id = response.Result
+                });
+
+            return BadRequest();
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] CustomerDto request)
+        [SwaggerResponse(Constants.Accepted, Constants.Aceptado, typeof(int))]
+        [SwaggerResponse(Constants.NotFound, Constants.NoEncontrado, typeof(ResponseDto<int>))]
+        public async Task<IActionResult> Update(int id, [FromBody] CustomerDtoRequest request)
         {
-            await _service.UpdateAsync(id, request);
-            return Accepted();
+            var response = await _service.UpdateAsync(id, request);
+
+            if (response.Success)
+                return Accepted($"Customer/{response.Result}", new
+                {
+                    id = response.Result
+                });
+            return NotFound(id);
         }
 
 
         [HttpDelete("{id:int}")]
+        [SwaggerResponse(Constants.Accepted, Constants.Aceptado, typeof(int))]
+        [SwaggerResponse(Constants.NotFound, Constants.NoEncontrado, typeof(ResponseDto<int>))]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            var response = await _service.DeleteAsync(id);
+            if (response.Success)
+                return Accepted();
 
-            return Accepted();
+            return NotFound(id);
         }
     }
 }

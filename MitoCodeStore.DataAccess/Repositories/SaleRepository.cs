@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MitoCodeStore.Entities;
 using MitoCodeStore.Entities.Complex;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace MitoCodeStore.DataAccess.Repositories
 {
@@ -14,60 +14,60 @@ namespace MitoCodeStore.DataAccess.Repositories
         {
         }
 
-        public async Task<(ICollection<InvoiceInfo> collection, int total)> SelectAsync(string dni, int page, int rows)
+        public async Task<(ICollection<InvoiceInfo> collection, int total)> SelectAsync(string dni,
+            int page, int rows)
         {
-            var tupla = await ListCollection(p => p.Customer.NumberId == dni,
+            return await ListCollectionAsync(GetSelector(),
+                p => p.Customer.NumberId == dni,
                 page,
                 rows);
-
-            var collection = GetTuple(tupla);
-
-            return (collection, tupla.total);
         }
 
         public async Task<(ICollection<InvoiceInfo> collection, int total)> SelectAsync(DateTime dateInit, DateTime dateEnd, int page, int rows)
         {
-            var tupla = await ListCollection(p => p.Date <= dateInit
-                && p.Date >= dateEnd,
+            return await ListCollectionAsync(GetSelector(),
+                p => dateInit <= p.Date
+                     && dateEnd >= p.Date,
                 page,
                 rows);
-
-            var collection = GetTuple(tupla);
-
-            return (collection, tupla.total);
         }
-        
+
         public async Task<(ICollection<InvoiceInfo> collection, int total)> SelectByInvoiceNumberAsync(string invoiceNumber, int page, int rows)
         {
-            var tupla = await ListCollection(p => p.InvoiceNumber == invoiceNumber,
+            return await ListCollectionAsync(GetSelector(),
+                p => p.InvoiceNumber.Contains(invoiceNumber),
                 page,
                 rows);
-
-            var collection = GetTuple(tupla);
-
-            return (collection, tupla.total);
         }
 
-        private static List<InvoiceInfo> GetTuple((ICollection<Sale> collection, int total) tupla)
+        private static Expression<Func<Sale, InvoiceInfo>> GetSelector()
         {
-            var collection = tupla.collection
-                .Select(p => new InvoiceInfo
-                {
-                    Id = p.Id,
-                    CustomerName = p.Customer.Name,
-                    InvoiceNumber = p.InvoiceNumber,
-                    SaleDate = p.Date,
-                    TotalAmount = p.TotalAmount
-                })
-                .ToList();
-            return collection;
+            return p => new InvoiceInfo
+            {
+                Id = p.Id,
+                CustomerName = p.Customer.Name,
+                InvoiceNumber = p.InvoiceNumber,
+                SaleDate = p.Date,
+                TotalAmount = p.TotalAmount
+            };
         }
 
-        public async Task<int> CreateAsync(Sale entity)
+        public async Task<ICollection<InvoiceDetailInfo>> GetSaleDetails(int saleId)
         {
+            var collection = Context.SaleDetails.FromSqlRaw("EXEC uspSelectSaleDetails {0}", saleId);
+            return await collection.ToListAsync();
+        }
+
+        public async Task<Sale> CreateAsync(Sale entity)
+        {
+            var number = await Context.Set<Sale>().CountAsync();
+            entity.InvoiceNumber = $"F{number:0000}";
+
+            await Context.Database.BeginTransactionAsync();
+
             await Context.Set<Sale>().AddAsync(entity);
             Context.Entry(entity).State = EntityState.Added;
-            return entity.Id;
+            return entity;
         }
 
         public async Task CreateSaleDetail(SaleDetail entity)
@@ -79,6 +79,7 @@ namespace MitoCodeStore.DataAccess.Repositories
         public async Task CommitTransaction()
         {
             await Context.SaveChangesAsync();
+            await Context.Database.CommitTransactionAsync();
         }
     }
 }
