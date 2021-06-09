@@ -102,8 +102,9 @@ namespace MitoCodeStore.Services.Implementations
             {
                 new Claim(ClaimTypes.Name, identity.UserName),
                 new Claim(ClaimTypes.Email, identity.Email),
+                new Claim(ClaimTypes.GivenName, response.FullName)
             };
-
+            
             var symetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.Jwt.SigningKey));
 
             var signingCredentials = new SigningCredentials(symetricSecurityKey, SecurityAlgorithms.HmacSha256);

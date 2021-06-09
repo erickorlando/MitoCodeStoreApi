@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Serilog;
+using Serilog.Events;
 
 namespace MitoCodeStoreApi
 {
@@ -22,6 +19,10 @@ namespace MitoCodeStoreApi
                 {
                     x.ClearProviders();
                     x.AddConsole();
+                })
+                .UseSerilog((options, logging) =>
+                {
+                    logging.WriteTo.File("Log.txt", LogEventLevel.Warning, fileSizeLimitBytes:1024, rollingInterval: RollingInterval.Day);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

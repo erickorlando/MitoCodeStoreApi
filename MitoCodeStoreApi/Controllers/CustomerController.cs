@@ -14,8 +14,8 @@ namespace MitoCodeStoreApi.Controllers
     [Route(Constants.RouteTemplate)]
     [ApiVersion(Constants.V1)]
     [ApiController]
-    [Authorize]
     [TypeFilter(typeof(FiltroRecurso))]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _service;
@@ -27,6 +27,7 @@ namespace MitoCodeStoreApi.Controllers
 
         [HttpGet]
         [SwaggerResponse(Constants.Ok, Constants.Listo, typeof(CustomerDtoResponse))]
+        [SwaggerResponse(Constants.Unauthorized, Constants.NoAutorizado)]
         public async Task<IActionResult> List([FromQuery] string filter,
             int page = 1, int rows = 4)
         {
