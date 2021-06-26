@@ -52,7 +52,10 @@ namespace MitoCodeStoreApi
                     options.AddPolicy(_corsConfiguration,
                         builder =>
                         {
-                            builder.WithOrigins("*");
+                            builder.WithOrigins("*", "http://localhost","https://localhost");
+                            builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                         }
                     ))
                 .AddMvcCore()
