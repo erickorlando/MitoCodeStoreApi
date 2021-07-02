@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MitoCodeStore.DataAccess;
 
 namespace MitoCodeStore.DataAccess.Migrations
 {
     [DbContext(typeof(MitoCodeStoreDbContext))]
-    partial class MitoCodeStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210702042909_EmailToCustomer")]
+    partial class EmailToCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

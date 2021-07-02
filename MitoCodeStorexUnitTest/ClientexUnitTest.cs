@@ -22,8 +22,7 @@ namespace MitoCodeStorexUnitTest
 
             var logger = new Mock<ILogger<CustomerDtoRequest>>();
 
-            var service = new CustomerService(repository.Object, logger.Object);
-
+            var service = new CustomerService(repository.Object, logger.Object, null);
 
             // Act
             var actual = await service.GetCollectionAsync(new BaseDtoRequest("", 1, 4));
@@ -67,7 +66,7 @@ namespace MitoCodeStorexUnitTest
 
             var logger = new Mock<ILogger<CustomerDtoRequest>>();
 
-            var service = new CustomerService(repository, logger.Object);
+            var service = new CustomerService(repository, logger.Object, null);
 
             // Act
             var actual = await service.GetCollectionAsync(new BaseDtoRequest("", 1, rows));

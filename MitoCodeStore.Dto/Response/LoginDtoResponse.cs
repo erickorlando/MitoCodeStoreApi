@@ -10,6 +10,7 @@ namespace MitoCodeStore.Dto.Response
         public string Token { get; set; }
         public DateTime ExpiredDate { get; set; }
         public string UserId { get; set; }
+        public int? CustomerId { get; set; }
         public string UserCode { get; set; }
         public string FullName { get; set; }
         public ICollection<ModuleDtoResponse> Modules { get; set; }

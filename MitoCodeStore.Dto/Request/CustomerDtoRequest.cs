@@ -14,6 +14,10 @@ namespace MitoCodeStore.Dto.Request
         public DateTime BirthDate { get; set; }
 
         [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
         public string NumberId { get; set; }
     }
 }

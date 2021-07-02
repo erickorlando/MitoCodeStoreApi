@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MitoCodeStore.DataAccess;
+using MitoCodeStore.DataAccess.Repositories;
 using MitoCodeStore.Dto.Request;
 using MitoCodeStore.Dto.Response;
 using MitoCodeStore.Entities;
@@ -23,14 +24,17 @@ namespace MitoCodeStore.Services.Implementations
         private readonly UserManager<MitoCodeUserIdentity> _userManager;
         private readonly IOptions<AppSettings> _options;
         private readonly ILogger<AppSettings> _logger;
+        private readonly ICustomerRepository _customerRepository;
 
         public UserService(UserManager<MitoCodeUserIdentity> userManager,
             IOptions<AppSettings> options,
-            ILogger<AppSettings> logger)
+            ILogger<AppSettings> logger, 
+            ICustomerRepository customerRepository)
         {
             _userManager = userManager;
             _options = options;
             _logger = logger;
+            _customerRepository = customerRepository;
         }
 
         public async Task<RegisterUserDtoResponse> RegisterAsync(RegisterUserDtoRequest request)
@@ -58,7 +62,18 @@ namespace MitoCodeStore.Services.Implementations
                 {
                     var userIdentity = await _userManager.FindByNameAsync(request.UserCode);
                     if (userIdentity != null)
+                    {
                         response.UserId = userIdentity.Id;
+
+                        // Creamos el cliente.
+                        await _customerRepository.CreateAsync(new Customer
+                        {
+                            Name = $"{request.FirstName} {request.LastName}",
+                            BirthDate = DateTime.Today.AddYears(-18),
+                            NumberId = "88888888",
+                            Email = userIdentity.Email
+                        });
+                    }
                 }
 
                 response.Success = result.Succeeded;
@@ -98,11 +113,42 @@ namespace MitoCodeStore.Services.Implementations
             response.UserCode = identity.UserName;
             response.UserId = identity.Id;
 
+            if (response.UserCode == "erickorlando")
+            {
+                response.Modules = new List<ModuleDtoResponse>
+                {
+                    new ModuleDtoResponse {Name = "Clientes", Url = "/customers"},
+                    new ModuleDtoResponse {Name = "Productos", Url = "/products"},
+                    new ModuleDtoResponse {Name = "Categorías", Url = "/categories"},
+                    new ModuleDtoResponse {Name = "Ventas", Url = "/sales"},
+                    new ModuleDtoResponse {Name = "Consultas", Url = "/queries"},
+                    new ModuleDtoResponse {Name = "Reportes", Url = "/reports"},
+                };
+            }
+            else
+            {
+                response.Modules = new List<ModuleDtoResponse>
+                {
+                    new ModuleDtoResponse {Name = "Ventas", Url = "/sales"}, 
+                    new ModuleDtoResponse {Name = "Reportes", Url = "/reports"},
+                };
+            }
+
+            // Ubicar el registro del customer y devolver el ID como parte de los claims.
+            var sid = string.Empty;
+            var customer = await _customerRepository.GetItemByEmailAsync(identity.Email);
+            if (customer != null)
+            {
+                response.CustomerId = customer.Id;
+                sid = customer.Id.ToString();
+            }
+
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, identity.UserName),
                 new Claim(ClaimTypes.Email, identity.Email),
-                new Claim(ClaimTypes.GivenName, response.FullName)
+                new Claim(ClaimTypes.GivenName, response.FullName),
+                new Claim(ClaimTypes.Sid, sid)
             };
             
             var symetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.Jwt.SigningKey));

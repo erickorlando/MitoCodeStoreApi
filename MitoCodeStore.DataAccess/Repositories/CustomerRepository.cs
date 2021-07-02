@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MitoCodeStore.Entities;
 
 namespace MitoCodeStore.DataAccess.Repositories
@@ -20,6 +22,13 @@ namespace MitoCodeStore.DataAccess.Repositories
         public async Task<Customer> GetItemAsync(int id)
         {
             return await Select(id);
+        }
+
+        public async Task<Customer> GetItemByEmailAsync(string email)
+        {
+            return await Context.Set<Customer>()
+                .Where(x => x.Email.Equals(email))
+                .SingleOrDefaultAsync();
         }
 
         public async Task<int> CreateAsync(Customer entity)

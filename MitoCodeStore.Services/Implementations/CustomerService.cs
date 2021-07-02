@@ -7,6 +7,8 @@ using MitoCodeStore.Services.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using MitoCodeStore.DataAccess;
 
 namespace MitoCodeStore.Services.Implementations
 {
@@ -14,11 +16,13 @@ namespace MitoCodeStore.Services.Implementations
     {
         private readonly ICustomerRepository _repository;
         private readonly ILogger<CustomerDtoRequest> _logger;
+        private readonly UserManager<MitoCodeUserIdentity> _userManager;
 
-        public CustomerService(ICustomerRepository repository, ILogger<CustomerDtoRequest> logger)
+        public CustomerService(ICustomerRepository repository, ILogger<CustomerDtoRequest> logger, UserManager<MitoCodeUserIdentity> userManager)
         {
             _repository = repository;
             _logger = logger;
+            _userManager = userManager;
         }
 
 
@@ -34,8 +38,9 @@ namespace MitoCodeStore.Services.Implementations
                 {
                     CustomerId = p.Id,
                     CustomerName = p.Name,
-                    CustomerBirth = p.BirthDate.ToShortDateString(),
-                    CustomerNumberId = p.NumberId
+                    CustomerBirth = p.BirthDate.ToString(Constants.DateFormat),
+                    CustomerNumberId = p.NumberId,
+                    CustomerEmail = p.Email
                 })
                 .ToList();
 
@@ -63,7 +68,8 @@ namespace MitoCodeStore.Services.Implementations
                     CustomerId = customer.Id,
                     CustomerName = customer.Name,
                     CustomerBirth = customer.BirthDate.ToString(Constants.DateFormat),
-                    CustomerNumberId = customer.NumberId
+                    CustomerNumberId = customer.NumberId,
+                    CustomerEmail = customer.Email
                 };
 
                 response.Success = true;
@@ -87,8 +93,19 @@ namespace MitoCodeStore.Services.Implementations
                 {
                     Name = request.Name,
                     BirthDate = request.BirthDate,
-                    NumberId = request.NumberId
+                    NumberId = request.NumberId,
+                    Email = request.Email
                 });
+
+                var userName = request.Name.Split(' ').FirstOrDefault() ?? request.Name;
+                var result = await _userManager.CreateAsync(new MitoCodeUserIdentity
+                {
+                    FirstName = request.Name,
+                    BirthDate = Convert.ToDateTime(request.BirthDate),
+                    Email = request.Email,
+                    UserName = userName
+                }, "12345678");
+
                 response.Success = true;
             }
             catch (Exception ex)
@@ -109,7 +126,8 @@ namespace MitoCodeStore.Services.Implementations
                     Id = id,
                     Name = request.Name,
                     BirthDate = request.BirthDate,
-                    NumberId = request.NumberId
+                    NumberId = request.NumberId,
+                    Email = request.Email
                 });
 
                 response.Result = id;

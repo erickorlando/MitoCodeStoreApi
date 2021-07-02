@@ -73,6 +73,9 @@ namespace MitoCodeStoreApi
             {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedAccount = false;
             }).AddEntityFrameworkStores<MitoCodeStoreDbContext>();

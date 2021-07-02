@@ -10,6 +10,8 @@ namespace MitoCodeStore.DataAccess.Repositories
 
         Task<Customer> GetItemAsync(int id);
 
+        Task<Customer> GetItemByEmailAsync(string email);
+
         Task<int> CreateAsync(Customer entity);
 
         Task UpdateAsync(Customer entity);

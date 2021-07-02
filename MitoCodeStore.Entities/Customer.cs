@@ -14,5 +14,8 @@ namespace MitoCodeStore.Entities
         [Required]
         [StringLength(11)]
         public string NumberId { get; set; }
+
+        [StringLength(100)]
+        public string Email { get; set; }
     }
 }
