@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,7 @@ using MitoCodeStore.DataAccess;
 using MitoCodeStore.Entities;
 using MitoCodeStore.Services;
 using MitoCodeStoreApi.Filters;
+using MitoCodeStoreApi.Profiles;
 
 namespace MitoCodeStoreApi
 {
@@ -61,12 +63,16 @@ namespace MitoCodeStoreApi
                 .AddMvcCore()
                 .AddApiExplorer(); 
 
-            services.AddInjection();
+            services.AddInjection()
+                .AddAutoMapper(cfg =>
+                {
+                    cfg.AddProfile<CustomerProfile>();
+                });
 
             services.AddDbContext<MitoCodeStoreDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
-                options.LogTo(Console.WriteLine, LogLevel.Information);
+                //options.LogTo(Console.WriteLine, LogLevel.Information);
             });
 
             services.AddIdentityCore<MitoCodeUserIdentity>(options =>

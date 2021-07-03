@@ -7,6 +7,7 @@ using MitoCodeStore.Services.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using MitoCodeStore.DataAccess;
 
@@ -15,12 +16,17 @@ namespace MitoCodeStore.Services.Implementations
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _repository;
+        private readonly IMapper _mapper;
         private readonly ILogger<CustomerDtoRequest> _logger;
         private readonly UserManager<MitoCodeUserIdentity> _userManager;
 
-        public CustomerService(ICustomerRepository repository, ILogger<CustomerDtoRequest> logger, UserManager<MitoCodeUserIdentity> userManager)
+        public CustomerService(ICustomerRepository repository, 
+            IMapper mapper,
+            ILogger<CustomerDtoRequest> logger, 
+            UserManager<MitoCodeUserIdentity> userManager)
         {
             _repository = repository;
+            _mapper = mapper;
             _logger = logger;
             _userManager = userManager;
         }
@@ -34,14 +40,7 @@ namespace MitoCodeStore.Services.Implementations
                 .GetCollectionAsync(request.Filter ?? string.Empty, request.Page, request.Rows);
 
             response.Collection = tuple.collection
-                .Select(p => new CustomerDtoSingleResponse()
-                {
-                    CustomerId = p.Id,
-                    CustomerName = p.Name,
-                    CustomerBirth = p.BirthDate.ToString(Constants.DateFormat),
-                    CustomerNumberId = p.NumberId,
-                    CustomerEmail = p.Email
-                })
+                .Select(p => _mapper.Map<CustomerDtoSingleResponse>(p))
                 .ToList();
 
             response.TotalPages = MitoCodeStoreUtils.GetTotalPages(tuple.total, request.Rows);
@@ -63,14 +62,7 @@ namespace MitoCodeStore.Services.Implementations
                     return response;
                 }
 
-                response.Result = new CustomerDtoSingleResponse
-                {
-                    CustomerId = customer.Id,
-                    CustomerName = customer.Name,
-                    CustomerBirth = customer.BirthDate.ToString(Constants.DateFormat),
-                    CustomerNumberId = customer.NumberId,
-                    CustomerEmail = customer.Email
-                };
+                response.Result = _mapper.Map<CustomerDtoSingleResponse>(customer);
 
                 response.Success = true;
             }
@@ -89,16 +81,10 @@ namespace MitoCodeStore.Services.Implementations
 
             try
             {
-                response.Result = await _repository.CreateAsync(new Customer
-                {
-                    Name = request.Name,
-                    BirthDate = request.BirthDate,
-                    NumberId = request.NumberId,
-                    Email = request.Email
-                });
+                response.Result = await _repository.CreateAsync(_mapper.Map<Customer>(request));
 
                 var userName = request.Name.Split(' ').FirstOrDefault() ?? request.Name;
-                var result = await _userManager.CreateAsync(new MitoCodeUserIdentity
+                await _userManager.CreateAsync(new MitoCodeUserIdentity
                 {
                     FirstName = request.Name,
                     BirthDate = Convert.ToDateTime(request.BirthDate),
@@ -121,14 +107,8 @@ namespace MitoCodeStore.Services.Implementations
             var response = new ResponseDto<int>();
             try
             {
-                await _repository.UpdateAsync(new Customer
-                {
-                    Id = id,
-                    Name = request.Name,
-                    BirthDate = request.BirthDate,
-                    NumberId = request.NumberId,
-                    Email = request.Email
-                });
+                request.Id = id;
+                await _repository.UpdateAsync(_mapper.Map<Customer>(request));
 
                 response.Result = id;
                 response.Success = true;

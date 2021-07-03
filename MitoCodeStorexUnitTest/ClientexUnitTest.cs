@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using MitoCodeStore.DataAccess.Repositories;
 using MitoCodeStore.Dto.Request;
@@ -21,8 +22,9 @@ namespace MitoCodeStorexUnitTest
                 .Returns(CustomerResults());
 
             var logger = new Mock<ILogger<CustomerDtoRequest>>();
+            var mapper = new Mock<IMapper>();
 
-            var service = new CustomerService(repository.Object, logger.Object, null);
+            var service = new CustomerService(repository.Object, mapper.Object, logger.Object, null);
 
             // Act
             var actual = await service.GetCollectionAsync(new BaseDtoRequest("", 1, 4));
@@ -65,11 +67,12 @@ namespace MitoCodeStorexUnitTest
             //    .ReturnsAsync((list, 0));
 
             var logger = new Mock<ILogger<CustomerDtoRequest>>();
+            var mapper = new Mock<IMapper>();
 
-            var service = new CustomerService(repository, logger.Object, null);
+            var service = new CustomerService(repository, mapper.Object, logger.Object, null);
 
             // Act
-            var actual = await service.GetCollectionAsync(new BaseDtoRequest("", 1, rows));
+            var actual = await service.GetCollectionAsync(new BaseDtoRequest(filter, 1, rows));
 
             // Assert
             Assert.Equal(expected, actual.TotalPages);
