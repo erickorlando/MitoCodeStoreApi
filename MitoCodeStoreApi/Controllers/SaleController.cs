@@ -24,6 +24,15 @@ namespace MitoCodeStoreApi.Controllers
         }
 
         [HttpGet]
+        [Route("ProductsGrid")]
+        [SwaggerResponse(Constants.Ok, Constants.Listo, typeof(ProductsGridDtoResponse))]
+        public async Task<IActionResult> ProductsGrid()
+        {
+
+        }
+
+
+        [HttpGet]
         [Route("List")]
         [SwaggerResponse(Constants.Ok, Constants.Listo, typeof(SaleDtoResponse))]
         public async Task<IActionResult> List([FromQuery] int page = 1, int rows = 4, string initialdate = "", string finaldate = "", string dni = "", string number = "")
