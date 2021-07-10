@@ -35,7 +35,8 @@ namespace MitoCodeStore.Services.Implementations
                     ProductId = x.Id,
                     Category = x.CategoryName,
                     ProductName = x.Name,
-                    UnitPrice = x.UnitPrice
+                    UnitPrice = x.UnitPrice,
+                    ProductImageUrl = x.ImageUrl
                 })
                 .ToList();
 

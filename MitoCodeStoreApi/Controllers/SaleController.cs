@@ -17,10 +17,12 @@ namespace MitoCodeStoreApi.Controllers
     public class SaleController : ControllerBase
     {
         private readonly ISaleService _service;
+        private readonly IProductService _productService;
 
-        public SaleController(ISaleService service)
+        public SaleController(ISaleService service, IProductService productService)
         {
             _service = service;
+            _productService = productService;
         }
 
         [HttpGet]
@@ -28,7 +30,7 @@ namespace MitoCodeStoreApi.Controllers
         [SwaggerResponse(Constants.Ok, Constants.Listo, typeof(ProductsGridDtoResponse))]
         public async Task<IActionResult> ProductsGrid()
         {
-
+            return Ok(await _productService.GetCollectionAsync(new BaseDtoRequest(string.Empty, 1, 100)));
         }
 
 
