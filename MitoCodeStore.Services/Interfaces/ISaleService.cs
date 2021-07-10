@@ -13,5 +13,6 @@ namespace MitoCodeStore.Services.Interfaces
 
         Task<SaleDetailDtoResponse> SelectDetails(int saleId);
         Task<ResponseDto<int>> CreateAsync(SaleDtoRequest request);
+        Task<ReportDtoResponse> ReportSalesByMonthAsync(int month);
     }
 }

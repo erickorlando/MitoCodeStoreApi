@@ -8,6 +8,7 @@ using MitoCodeStore.Services.Interfaces;
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MitoCodeStore.Services.Implementations
@@ -30,7 +31,7 @@ namespace MitoCodeStore.Services.Implementations
                 SaleId = p.Id,
                 Customer = p.CustomerName,
                 InvoiceNumber = p.InvoiceNumber,
-                SaleDate = p.SaleDate.ToShortDateString(),
+                SaleDate = p.SaleDate.ToString(Constants.DateFormat),
                 SaleTotal = p.TotalAmount
             };
         }
@@ -161,14 +162,23 @@ namespace MitoCodeStore.Services.Implementations
             return response;
         }
 
-        public async Task<ResponseDto<string>> GeneratePdf()
+        public async Task<ReportDtoResponse> ReportSalesByMonthAsync(int month)
         {
-            var response = new ResponseDto<string>();
+            var response = new ReportDtoResponse();
 
             try
             {
-                response.Result = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "Assets", "index.html"));
-                response.Success = true;
+                var collection = await _repository.SelectReportByMonthAsync(month);
+
+                response.PieData = collection
+                    .Select(x => new PieDataDto
+                    {
+                        Day = x.Day,
+                        TotalSales = x.TotalSales
+                    })
+                    .ToList();
+
+                response.TotalAmount = response.PieData.Sum(c => c.TotalSales);
             }
             catch (Exception ex)
             {

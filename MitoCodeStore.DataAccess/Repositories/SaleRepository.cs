@@ -58,6 +58,13 @@ namespace MitoCodeStore.DataAccess.Repositories
             return await collection.ToListAsync();
         }
 
+        public async Task<ICollection<ReportByMonthInfo>> SelectReportByMonthAsync(int month)
+        {
+            var collection = Context.ReportByMonth.FromSqlRaw("EXEC uspReportByMonth {0}", month);
+
+            return await collection.ToListAsync();
+        }
+
         public async Task<Sale> CreateAsync(Sale entity)
         {
             var number = await Context.Set<Sale>().CountAsync();

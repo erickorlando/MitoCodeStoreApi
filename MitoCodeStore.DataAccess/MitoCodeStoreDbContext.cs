@@ -56,6 +56,13 @@ namespace MitoCodeStore.DataAccess
             modelBuilder.Entity<InvoiceDetailInfo>()
                 .Property(p => p.Total)
                 .HasPrecision(8, 2);
+
+            modelBuilder.Entity<ReportByMonthInfo>()
+                .HasNoKey();
+
+            modelBuilder.Entity<ReportByMonthInfo>()
+                .Property(p => p.TotalSales)
+                .HasPrecision(11, 2);
         }
 
 
@@ -65,5 +72,7 @@ namespace MitoCodeStore.DataAccess
         public DbSet<Sale> Sales { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<InvoiceDetailInfo> SaleDetails { get; set; }
+
+        public DbSet<ReportByMonthInfo> ReportByMonth { get; set; }
     }
 }

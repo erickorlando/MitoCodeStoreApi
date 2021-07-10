@@ -15,5 +15,6 @@ namespace MitoCodeStore.DataAccess.Repositories
         Task CreateSaleDetail(SaleDetail entity);
         Task CommitTransaction();
         Task<ICollection<InvoiceDetailInfo>> GetSaleDetails(int saleId);
+        Task<ICollection<ReportByMonthInfo>> SelectReportByMonthAsync(int month);
     }
 }
